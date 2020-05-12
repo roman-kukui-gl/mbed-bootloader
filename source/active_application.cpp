@@ -27,7 +27,9 @@
 #include "update-client-paal/arm_uc_paal_update_api.h"
 #include "update-client-pal-flashiap/arm_uc_pal_flashiap_platform.h"
 #include "mbedtls/sha256.h"
+#ifdef TARGET_LIKE_MBED
 #include "mbed.h"
+#endif
 
 #include <inttypes.h>
 
