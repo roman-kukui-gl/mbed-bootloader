@@ -85,4 +85,51 @@ uint32_t arm_uc_flashiap_get_flash_start(void)
     return flash->get_flash_start();
 }
 
+uint32_t arm_uc_flashiap_align_to_sector(uint32_t address, bool round_down)
+{
+    /* default to returning the beginning of the flash */
+    uint32_t sector_aligned_address = flash->get_flash_start();
+    uint32_t flash_end_address = sector_aligned_address + flash->get_flash_size();
+
+    /* addresses out of bounds are pinned to the flash boundaries */
+    if (address >= flash_end_address) {
+
+        sector_aligned_address = flash_end_address;
+
+        /* for addresses within bounds step through the sector map */
+    } else if (address > sector_aligned_address) {
+
+        uint32_t sector_size = 0;
+
+        /* add sectors from start of flash until we exceed the required address
+           we cannot assume uniform sector size as in some mcu sectors have
+           drastically different sizes
+        */
+        while (sector_aligned_address < address) {
+            sector_size = arm_uc_flashiap_get_sector_size(sector_aligned_address);
+            sector_aligned_address += sector_size;
+        }
+
+        /* if round down to nearest sector, remove the last sector from address
+           if not already aligned
+        */
+        if (round_down && (sector_aligned_address != address)) {
+            sector_aligned_address -= sector_size;
+        }
+    }
+
+    return sector_aligned_address;
+}
+
+uint32_t arm_uc_flashiap_round_up_to_page_size(uint32_t size)
+{
+    uint32_t page_size = flash->get_page_size();
+
+    if (size != 0) {
+        size = ((size - 1) / page_size + 1) * page_size;
+    }
+
+    return size;
+}
+
 #endif /* ARM_UC_FEATURE_PAL_FLASHIAP */
