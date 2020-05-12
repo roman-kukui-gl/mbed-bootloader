@@ -20,10 +20,15 @@
 #include "r_bsp.h"
 #include "serial_term_uart.h"
 
+extern int mbed_bootloader_entrypoint(void);
+
 void main(void)
 {
     uart_config();
     uart_string_printf("\nSDK RX65N-CK\n");
+
+    mbed_bootloader_entrypoint();
+
     while(1)
     {
         R_BSP_SoftwareDelay(1, BSP_DELAY_SECS);
