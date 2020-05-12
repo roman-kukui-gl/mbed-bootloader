@@ -6,7 +6,6 @@ set(COMPILER_FLAGS_COMMON "\
 -mcpu=rx64m \
 -misa=v2 \
 -mlittle-endian-data \
--std=gnu99 \
 -Wa,-adlnh=\"$(basename $(notdir $<)).lst\" \
 -MMD \
 -MP \
@@ -25,7 +24,10 @@ set(LINKER_FLAGS_COMMON "\
 set(CMAKE_ASM_FLAGS "-g2 -O0 ${COMPILER_FLAGS_COMMON}")
 
 # set flags for C compiler
-set(CMAKE_C_FLAGS "-g2 -O0 ${COMPILER_FLAGS_COMMON}")
+set(CMAKE_C_FLAGS "-g2 -O0 -std=gnu99 ${COMPILER_FLAGS_COMMON}")
+
+# set flags for C++ compiler
+set(CMAKE_CXX_FLAGS "-g2 -O0 ${COMPILER_FLAGS_COMMON}")
 
 # set flags for linker
 set(CMAKE_EXE_LINKER_FLAGS "${LINKER_FLAGS_COMMON}")
