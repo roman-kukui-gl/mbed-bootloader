@@ -17,10 +17,12 @@
 // ----------------------------------------------------------------------------
 
 #include "bootloader_common.h"
-#ifdef TARGET_LIKE_MBED
+#if defined(TARGET_LIKE_MBED)
 #include "mbed.h"
 #include "hal/serial_api.h"
 #include "SerialWireOutput.h"
+#elif defined(__RXv2__)
+#include "serial_term_uart.h"
 #endif
 
 /* buffer used in storage operations */
@@ -80,7 +82,21 @@ void boot_debug(const char *s)
 }
 
 #elif __RXv2__
-    #error "Target RXv2"
+#ifdef __cplusplus
+extern "C" {
+#endif
+/**
+ * @brief Function that directly outputs to serial port in blocking mode.
+ *
+ * @param string outputed to serial port.
+ */
+void boot_debug(const char *s)
+{
+    uart_string_printf((char*)s);
+}
+#ifdef __cplusplus
+}
+#endif
 #else
 
 /**

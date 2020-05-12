@@ -19,9 +19,24 @@
 #ifndef BOOTLOADER_COMMON_H
 #define BOOTLOADER_COMMON_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include "bootloader_config.h"
 #include "arm_uc_paal_update_api.h"
+
+/* No operation macro. */
+#ifdef __RXv2__
+#include "r_bsp.h"
+#define __nop       R_NOP()
+
+extern void uart_string_printf(char *pString);
+
+#else
+#define __nop       __WFI()
+#endif
 
 /* use a cut down version of ARM_UCP_FLASHIAP_BLOCKDEVICE to reduce
    binary size if ARM_UC_USE_PAL_BLOCKDEVICE is set */
@@ -37,10 +52,6 @@ extern ARM_UC_PAAL_UPDATE MBED_CLOUD_CLIENT_UPDATE_STORAGE;
 /* If jump address is not set then default to start address. */
 #ifndef MBED_CONF_APP_APPLICATION_JUMP_ADDRESS
 #define MBED_CONF_APP_APPLICATION_JUMP_ADDRESS MBED_CONF_MBED_BOOTLOADER_APPLICATION_START_ADDRESS
-#endif
-
-#ifdef __cplusplus
-extern "C" {
 #endif
 
 #define SIZEOF_SHA256  (256/8)
@@ -67,7 +78,7 @@ void boot_debug(const char *s);
     if (!(condition)) {                          \
         boot_debug("[ERR ] ASSERT\r\n");                   \
         /* coverity[no_escape] */                \
-        while (1) __WFI();                       \
+        while (1) __nop;                       \
     }                                            \
 }
 
