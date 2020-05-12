@@ -90,7 +90,7 @@
  * segment in ROM (possible only with RX64M, RX71M, RX65N-2 groups).
  * See section 2.14 in the App Note.
  */
-#define FLASH_CFG_CODE_FLASH_RUN_FROM_ROM   (1)
+#define FLASH_CFG_CODE_FLASH_RUN_FROM_ROM   (0)
 
 
 /******************************************************************************

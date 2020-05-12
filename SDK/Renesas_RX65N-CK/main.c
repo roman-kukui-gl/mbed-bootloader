@@ -25,7 +25,14 @@ extern int mbed_bootloader_entrypoint(void);
 void main(void)
 {
     uart_config();
-    uart_string_printf("\nSDK RX65N-CK\n");
+
+    uart_string_printf("\nRX65N-CK board initialized\n");
+
+    uart_string_printf("Build: ");
+    uart_string_printf(__DATE__);
+    uart_string_printf("\t");
+    uart_string_printf(__TIME__);
+    uart_string_printf("\n");
 
     mbed_bootloader_entrypoint();
 

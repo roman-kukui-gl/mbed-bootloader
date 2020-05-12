@@ -607,7 +607,6 @@ Configuration Options
    0 = Disabled (default)
    1 = Smart Configurator initialization code used
 */
-/// \todo Check peripheral initialization
 #define BSP_CFG_CONFIGURATOR_SELECT                 (0) // <-- Updated by GUI. Do not edit this value manually
 
 /* For some BSP functions, it is necessary to ensure that, while these functions are executing, interrupts from other 
