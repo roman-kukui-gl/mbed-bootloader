@@ -20,6 +20,7 @@
 #include "update-client-metadata-header/arm_uc_buffer_utilities.h"
 #include <string.h>
 
+#if defined(ARM_UC_FEATURE_CRYPTO_MBEDTLS) && (ARM_UC_FEATURE_CRYPTO_MBEDTLS == 1)
 extern int32_t ARM_UC_cryptoHMACSHA256(arm_uc_buffer_t *key, arm_uc_buffer_t *input, arm_uc_buffer_t *output);
 
 int32_t ARM_UC_getDeviceKey256Bit(arm_uc_buffer_t *output)
@@ -51,6 +52,7 @@ int32_t ARM_UC_getDeviceKey256Bit(arm_uc_buffer_t *output)
 
     return result;
 }
+#endif // defined(ARM_UC_FEATURE_CRYPTO_MBEDTLS) && (ARM_UC_FEATURE_CRYPTO_MBEDTLS == 1)
 
 int32_t arm_uc_parse_internal_header_v2(const uint8_t *input,
                                                arm_uc_firmware_details_t *details)
@@ -138,6 +140,7 @@ int32_t arm_uc_create_internal_header_v2(const arm_uc_firmware_details_t *input,
     return result;
 }
 
+#if ARM_UCP_FLASHIAP_BLOCKDEVICE
 int32_t arm_uc_parse_external_header_v2(const uint8_t *input,
                                                arm_uc_firmware_details_t *details)
 {
@@ -278,3 +281,4 @@ int32_t arm_uc_create_external_header_v2(const arm_uc_firmware_details_t *input,
 
     return result;
 }
+#endif // ARM_UCP_FLASHIAP_BLOCKDEVICE
