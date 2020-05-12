@@ -1,32 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-
-add_definitions(-DMBED_BOOTLOADER_NONSTANDARD_ENTRYPOINT)
-
-add_definitions(-DUPDATE_CLIENT_STORAGE_FLASHIAP)
-
-add_definitions(-DMBED_CONF_STORAGE_TDB_INTERNAL_INTERNAL_BASE_ADDRESS=0xFFEF0000)
-add_definitions(-DMBED_CONF_STORAGE_TDB_INTERNAL_INTERNAL_SIZE=0x00100000)
-
-# Address of application reset vector
-add_definitions(-DMBED_CONF_MBED_BOOTLOADER_APPLICATION_START_ADDRESS=0xFFE00000)
-
-# FIRMWARE_METADATA_HEADER_ADDRESS = MBED_CONF_UPDATE_CLIENT_APPLICATION_DETAILS
-add_definitions(-DFIRMWARE_METADATA_HEADER_ADDRESS=0xFFFF0000)
-
-add_definitions(-DMBED_CONF_MBED_BOOTLOADER_MAX_APPLICATION_SIZE=0xF0000)
-
-add_definitions(-DMAX_FIRMWARE_LOCATIONS=1)
-
-add_definitions(-DMAX_BOOT_RETRIES=3)
-
-add_definitions(-DARM_UC_PROFILE_MBED_CLIENT_LITE=1)
-
-add_definitions(-DMBED_CLOUD_CLIENT_UPDATE_STORAGE=ARM_UCP_FLASHIAP)
-
-#define boot_debug(x)
-add_definitions(-Dboot_debug=uart_string_printf)
-
+include("define.txt")
 
 message("RX65N Cloud Kit Bootloader Build System")
 
@@ -63,8 +37,10 @@ include_directories(modules/mbedtls/include)
 include_directories(modules/storage/FlashIAP)
 
 include_directories(modules)
+
 include_directories(modules/update-client-common)
 include_directories(modules/storage/paal)
+include_directories(modules/storage/paal/update-client-paal)
 
 include_directories(modules/storage/pal-flashiap)
 
@@ -114,8 +90,13 @@ set(BOOTLOADER_SRCS
     modules/storage/pal-flashiap/source/arm_uc_pal_flashiap.c
     modules/storage/pal-flashiap/source/arm_uc_pal_flashiap_implementation.c
 
+    modules/metadata-header/source/arm_uc_buffer_utilities.c
+    modules/metadata-header/source/arm_uc_metadata_header_v2.c
+
     source/bootloader_common.cpp
     source/upgrade.cpp
+    source/active_application.cpp
+
     source/main.cpp
 )
 
