@@ -132,4 +132,9 @@ uint32_t arm_uc_flashiap_round_up_to_page_size(uint32_t size)
     return size;
 }
 
+int32_t arm_uc_flashiap_free(void)
+{
+    return flash->deinit();
+}
+
 #endif /* ARM_UC_FEATURE_PAL_FLASHIAP */
