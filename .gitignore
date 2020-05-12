@@ -1,3 +1,9 @@
+# IDE configs
+.vscode/
+
+# Build dirs
+build/
+
 # Compiled Object files
 *.slo
 *.lo
