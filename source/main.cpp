@@ -44,6 +44,10 @@ const arm_uc_installer_details_t bootloader = {
     .layout   = BOOTLOADER_STORAGE_LAYOUT
 };
 
+/** @brief  Read application start from app reset vector, start app.
+ */
+void start_application(void);
+
 #if defined(MBED_BOOTLOADER_NONSTANDARD_ENTRYPOINT)
 extern "C"
 int mbed_bootloader_entrypoint(void)
@@ -63,7 +67,7 @@ int main(void)
     /* Print bootloader information                                          */
     /*************************************************************************/
 
-    boot_debug("\r\nMbed Bootloader\r\n");
+    boot_debug("\r\nMbed Bootloader (RX65N-CK mod.)\r\n");
 
 #if MBED_CONF_MBED_TRACE_ENABLE
     mbed_trace_init();
@@ -102,7 +106,7 @@ int main(void)
         #ifdef TARGET_LIKE_MBED
         mbed_start_application(MBED_CONF_APP_APPLICATION_JUMP_ADDRESS);
         #else
-        /// \todo Add app start
+        start_application();
         #endif
     }
 
@@ -115,4 +119,18 @@ int main(void)
 
     boot_debug("Failed to jump to application!\r\n");
     return -1;
+}
+
+void start_application(void)
+{
+    // pointer to active application start address
+    uint32_t *reset_vector_reg = (uint32_t*)MBED_CONF_MBED_BOOTLOADER_APPLICATION_START_ADDRESS;
+
+    // pointer to main application entry point function
+    void (*active_app)(void) = (void(*)())(*reset_vector_reg);
+
+    // wait for printing complete
+    R_BSP_SoftwareDelay(500, BSP_DELAY_MILLISECS);
+
+    active_app();
 }
