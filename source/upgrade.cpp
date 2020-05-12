@@ -27,7 +27,9 @@
 #include "bootloader_common.h"
 
 #include "mbedtls/sha256.h"
+#ifdef TARGET_LIKE_MBED
 #include "mbed.h"
+#endif
 
 #include <inttypes.h>
 

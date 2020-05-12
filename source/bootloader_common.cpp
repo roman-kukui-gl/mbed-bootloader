@@ -17,9 +17,11 @@
 // ----------------------------------------------------------------------------
 
 #include "bootloader_common.h"
+#ifdef TARGET_LIKE_MBED
 #include "mbed.h"
 #include "hal/serial_api.h"
 #include "SerialWireOutput.h"
+#endif
 
 /* buffer used in storage operations */
 uint8_t buffer_array[BUFFER_SIZE];
@@ -77,6 +79,8 @@ void boot_debug(const char *s)
     swo.write(s, strlen(s));
 }
 
+#elif __RXv2__
+    #error "Target RXv2"
 #else
 
 /**

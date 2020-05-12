@@ -21,8 +21,10 @@
 #endif
 
 #include <inttypes.h>
-
+#include <stdlib.h>
+#ifdef TARGET_LIKE_MBED
 #include "mbed.h"
+#endif
 
 #include "update-client-paal/arm_uc_paal_update_api.h"
 #include "update-client-common/arm_uc_types.h"
@@ -31,7 +33,9 @@
 #include "bootloader_platform.h"
 #include "active_application.h"
 #include "bootloader_common.h"
+#ifdef TARGET_LIKE_MBED
 #include "mbed_application.h"
+#endif
 #include "upgrade.h"
 
 const arm_uc_installer_details_t bootloader = {
@@ -94,7 +98,12 @@ int main(void)
 
         /* forward control to ACTIVE application if it is deemed sane */
         boot_debug("booting...\r\n\r\n");
+
+        #ifdef TARGET_LIKE_MBED
         mbed_start_application(MBED_CONF_APP_APPLICATION_JUMP_ADDRESS);
+        #else
+        /// \todo Add app start
+        #endif
     }
 
     /* Reset bootCounter; this allows a user to reapply a new bootloader
