@@ -66,10 +66,9 @@ Macro definitions
     #error "Unsupported memory allocation of target boerd!"
 #endif
 
-#define FLASHIAP_AREA_START_BLOCK   MBED_CONF_STORAGE_TDB_INTERNAL_INTERNAL_BASE_ADDRESS
-#define FLASHIAP_AREA_START_ADDR    FLASHIAP_AREA_START_BLOCK // FLASH_CF_BLOCK_13 -> 32KB: 0xFFFC0000 - 0xFFFC7FFF
+#define FLASHIAP_AREA_START_ADDR    MBED_CONF_STORAGE_TDB_INTERNAL_INTERNAL_BASE_ADDRESS
 #define FLASHIAP_AREA_PAGE_SIZE     FLASH_CF_MIN_PGM_SIZE                           // 128 Bytes
-#define FLASHIAP_AREA_SIZE          MBED_CONF_STORAGE_TDB_INTERNAL_INTERNAL_SIZE    // 2 blocks (64KiB)
+#define FLASHIAP_AREA_SIZE          MBED_CONF_STORAGE_TDB_INTERNAL_INTERNAL_SIZE
 #define FLASHIAP_AREA_END_ADDR      (FLASHIAP_AREA_START_ADDR + FLASHIAP_AREA_SIZE)
 #define ERASE_VALUE                 (0xFF)
 #ifndef MBED_FLASH_INVALID_SIZE
@@ -271,24 +270,15 @@ int FlashIAP::erase(uint32_t addr, uint32_t size)
         return (-FLASH_ERR_FAILURE);
     }
 
-    if ( is_aligned_to(addr, size, get_sector_size(addr)) )
-    {
-        num_bloks_to_erase = size / get_sector_size(addr);
-    }
-    else
-    {
-        return (-FLASH_ERR_FAILURE);
-    }
     debug_print("FlashIAP::erase() INput -> address 0x%x num_bloks_to_erase %i .\n\r", addr, num_bloks_to_erase);
 
     R_BSP_InterruptsDisable();
     // LOOP THROUGH EACH BLOCK
     // This cycle is added caused by Erase function implementation (decrementing addr from start)
-    while (num_bloks_to_erase)
+    while (curr_addr_to_erase < (addr + size))
     {
         status = R_FLASH_Erase((flash_block_address_t)curr_addr_to_erase, 1);
         curr_addr_to_erase += get_sector_size(addr);
-        num_bloks_to_erase--;
     }
     R_BSP_InterruptsEnable();
 
