@@ -36,9 +36,17 @@ void main(void)
 
     mbed_bootloader_entrypoint();
 
+    // reboot when exited from main()
+    uart_string_printf("rebooting ...\n");
+    R_BSP_SoftwareDelay(500, BSP_DELAY_MILLISECS);
+
+    R_BSP_RegisterProtectDisable(BSP_REG_PROTECT_LPC_CGC_SWR);
+
+    SYSTEM.SWRR = 0xA501;       // reset MCU
+
+    // wait untill reset
     while(1)
     {
-        R_BSP_SoftwareDelay(1, BSP_DELAY_SECS);
-        uart_string_printf(".");
+        R_NOP();
     }
 }
