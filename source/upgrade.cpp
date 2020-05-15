@@ -326,6 +326,20 @@ bool hwResetReason(void) {
     else {
         return false;
     }
-#endif
+#elif __RXv2__
+    // check reset reason for RXv2 core (RSTSR2 register)
+    if (0 != SYSTEM.RSTSR2.BYTE){
+        // watchdog or software reset occurs
+        boot_debug("[DBG ] System after software reset\r\n");
+
+        return false;
+    }
+    else {
+        boot_debug("[DBG ] System after hardware reset\r\n");
+
+        return true;
+    }
+#else
     return false;
+#endif
 }
