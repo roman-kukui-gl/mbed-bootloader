@@ -14,7 +14,9 @@ rm $TARGET_NAME.mot
 
 make -j1 $TARGET_NAME.elf
 
-rx-elf-objcopy $TARGET_NAME.elf -O srec -I elf32-rx-be-ns $TARGET_NAME.mot
+rx-elf-objcopy $TARGET_NAME.elf -I elf32-rx-be-ns -O srec $TARGET_NAME.mot
+rx-elf-objcopy $TARGET_NAME.elf -I elf32-rx-be-ns -O ihex $TARGET_NAME.hex
 
 rx-elf-objdump -h $TARGET_NAME.elf
 rx-elf-objdump -h $TARGET_NAME.mot
+rx-elf-objdump -h $TARGET_NAME.hex
