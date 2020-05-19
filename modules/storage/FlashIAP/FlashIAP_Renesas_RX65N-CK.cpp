@@ -270,6 +270,14 @@ int FlashIAP::erase(uint32_t addr, uint32_t size)
         return (-FLASH_ERR_FAILURE);
     }
 
+    if ( is_aligned_to(addr, size, get_sector_size(addr)) )
+    {
+        num_bloks_to_erase = size / get_sector_size(addr);
+    }
+    else
+    {
+        return (-FLASH_ERR_FAILURE);
+    }
     debug_print("FlashIAP::erase() INput -> address 0x%x num_bloks_to_erase %i .\n\r", addr, num_bloks_to_erase);
 
     R_BSP_InterruptsDisable();
