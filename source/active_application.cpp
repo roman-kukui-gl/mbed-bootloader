@@ -189,7 +189,7 @@ bool eraseActiveFirmware(uint32_t firmwareSize)
                                 MBED_CONF_MBED_BOOTLOADER_APPLICATION_START_ADDRESS;
         /* check that the erase will not exceed MBED_CONF_MBED_BOOTLOADER_MAX_APPLICATION_SIZE */
         if (erase_end_addr <= max_end_addr) {
-            result = arm_uc_flashiap_erase(erase_start_addr, size_needed);
+            result = arm_uc_flashiap_erase(erase_start_addr, (erase_end_addr - erase_start_addr));
         } else {
             boot_debug("[DBG ] Firmware size rounded up to the nearest sector boundary is larger than the maximum application size\r\n");
         }
